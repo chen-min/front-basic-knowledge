@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function foo(){
+          console.log(this.name);  
+        };
+
+        const obj = {
+            name: '蔡徐坤'
+        };
+        // apply 指定目标对象和参数数组，调用后
+        Function.prototype._apply = function(target, args) {
+            console.log(args);
+            args = args || [];
+            target = target || window;
+            target.fn = this;
+            const result = target.fn(...args);
+            delete target.fn;
+            return result;
+        }
+        foo._apply(obj, []);
+    </script>
+</body>
+</html>
