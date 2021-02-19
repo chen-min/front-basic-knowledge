@@ -8,86 +8,63 @@
 </head>
 <body>
     <script>
-        function foo(){
-          console.log(this.name);
-          console.log(arguments)  
-        };
-
-        // const obj = {
-        //     name: '蔡徐坤'
-        // };
-        // const newObj = {
-        //     name: '刘德华'
-        // }
-        // // bind 改变this指向，返回一个新的函数
-        // Function.prototype._bind = function(target, ...args) {
-        //     const that = this;
-        //     return function() {
-        //         target = target || window;
-        //         target.fn = that;
-        //         console.log('target.fn', target.fn);
-        //         let result = target.fn(...args);
-        //         delete target.fn
-        //         return result;
-        //     }
-        // }
-        // let newFoo = foo._bind(newObj, 'a', 'b', 'c');
-        // console.log(newFoo());
-
+        // https://blog.csdn.net/q3254421/article/details/82999718
         Function.prototype.myBind = function (thisArg, ...args) {
-                var self = this
-                console.log('this222', this);
-                // new优先级
-                var fbound = function () {
-                    console.log('this', this);
-                    self.apply(this instanceof self ? this : thisArg, args.concat(Array.prototype.slice.call(arguments)))
-                }
-                // 继承原型上的属性和方法
-                fbound.prototype = Object.create(self.prototype);
-                return fbound;
+            var self = this
+            console.log('this222', this);
+            var fbound = function () {
+                console.log('this', this);
+                // 如果当前函数的this指向的是构造函数中的this 则判定为new 操作
+                self.apply(this instanceof self ? this : thisArg, args.concat(Array.prototype.slice.call(arguments)))
+                // slice 方法可以用来将一个类数组（Array-like）对象/集合转换成一个新数组。
             }
+            // 继承原型上的属性和方法
+            fbound.prototype = Object.create(self.prototype);
+            return fbound;
+        }
 
-            //测试
-            const obj = { name: '写代码像蔡徐抻' }
-            function foo() {
-                console.log(this.name)
-                console.log(arguments)
-            }
+        //测试
+        const obj = { name: '写代码像蔡徐抻' }
+        function foo() {
+            console.log(this.name)
+            console.log(arguments)
+        }
 
-            foo.myBind(obj, 'a', 'b', 'c')()    //输出写代码像蔡徐抻 ['a', 'b', 'c']
-            console.log('-----------------------');
+        foo.myBind(obj, 'a', 'b', 'c')()    //输出写代码像蔡徐抻 ['a', 'b', 'c']
+        console.log('-----------------------');
 
-            const str = 'littleLuke';
-            console.log(str);
-            var a = function(){
-                console.log(this); // String {"littleLuke"}
-                console.log(this.constructor); // f String() { [native code] }
-                console.log(typeof this); // object
-                console.log(this instanceof String); // true
-            }
+        const str = 'littleLuke';
+        console.log(str);
+        var a = function () {
+            console.log(this); // String {"littleLuke"}
+            console.log(this.constructor); // f String() { [native code] }
+            console.log(typeof this); // object
+            console.log(this instanceof String); // true
+        }
 
-            a.call('littleLuke');
-            console.log('-----------------------');
+        a.call('littleLuke');
+        console.log('-----------------------');
 
-            (function(){
-                const str = '前端巅峰Peter老师牛逼'
-                str.xxoo = '你关注了吗？'
-                console.log(str.xxoo, 'xxoo')
-            })()
-            console.log('-----------------------');
+        (function () {
+            const str = '前端巅峰Peter老师牛逼'
+            str.xxoo = '你关注了吗？'
+            console.log(str.xxoo, 'xxoo')
+        })()
+        console.log('-----------------------');
 
-            // 原始代码：
-            const str2 = 'Peter老师666'
-            str2.substring(1)
-            console.log('str2', str2);
-            // 真正内部执行的是：
-            // let str = new String('Peter老师666') 
-            // let str1 = str.substring(1) 
-            // str = null 
-            // 你不知道的typeof string 竟然等于object
-            // 这就叫原始值包装类型，它的声明周期只是这一行访问它的代码执行完就销毁了。这是它与引用类型的区别，我们通过new String()创建的实例就是一个引用类型，所以它是一个 object.
-            console.log(typeof 'abc'); // string
-            // https://blog.csdn.net/weixin_42864905/article/details/109262417
+        // 原始代码：
+        const str2 = 'Peter老师666'
+        str2.substring(1)
+        console.log('str2', str2);
+        // 真正内部执行的是：
+        // let str = new String('Peter老师666') 
+        // let str1 = str.substring(1) 
+        // str = null 
+        // 你不知道的typeof string 竟然等于object
+        // 这就叫原始值包装类型，它的声明周期只是这一行访问它的代码执行完就销毁了。这是它与引用类型的区别，我们通过new String()创建的实例就是一个引用类型，所以它是一个 object.
+        console.log(typeof 'abc'); // string
+        // https://blog.csdn.net/weixin_42864905/article/details/109262417
+    
     </script>
 </body>
 </html>

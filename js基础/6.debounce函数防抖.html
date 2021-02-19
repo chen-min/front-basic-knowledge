@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app" >11111</div>
+    <script>
+        // 防抖： 持续触发事件时，一定时间段内没有再触发事件，事件处理函数才会执行一次，如果设定的时间到来之前，又一次触发了事件，就重新开始延时。
+        // 防抖，即短时间内大量触发同一事件，只会执行一次函数，实现原理为设置一个定时器，约定在xx毫秒后再触发事件处理，每次触发事件都会重新设置计时器，直到xx毫秒内无第二次操作，防抖常用于搜索框/滚动条的监听事件处理，如果不做防抖，每输入一个字/滚动屏幕，都会触发事件处理，造成性能浪费
+        // 应用场景 函数防抖的应用场景：输入框搜索自动补全事件，频繁操作点赞和取消点赞等等。
+
+        function debounce(func, wait) {
+            let timeout = null
+            return function () {
+                let context = this
+                let args = arguments
+                if (timeout) clearTimeout(timeout)
+                timeout = setTimeout(() => {
+                    func.apply(context, args)
+                }, wait)
+            }
+        }
+
+        // 作者：写代码像蔡徐抻
+        // 链接：https://juejin.cn/post/6844904116552990727
+        // https://www.cnblogs.com/xiao-yaolx/p/11329551.html
+        document.getElementById('app').onclick = scroll(2000, function() {
+            console.log('sssss');
+        })
+
+    </script>
+</body>
+</html>
