@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 1.ES6的flat()
+        const arr = [[1, 2], [3, 4], [5, 6, 7]];
+        const newArr = arr.flat(Infinity);
+        console.log(newArr);
+
+        // 2.序列化后正则
+        const arr2 = [[1, 2], [3, 4], [5, 6, 7]];
+        console.log(JSON.stringify(arr2));
+        const str = `[${JSON.stringify(arr2).replace(/(\[|\])/g, '')}]`
+        console.log('str', str);
+        console.log(JSON.parse(str));   // [1, 1, 2, 1, 2, 3]
+        // 3.递归
+        const arr3 = [[1, 2], [3, 4], [5, 6, 7]];
+        let arr4 = [];
+        function myFlat(list) {
+            list && list.forEach(item => {
+                Array.isArray(item) ? myFlat(item) : arr4.push(item);
+            })
+            return arr4
+        };
+        const result = myFlat(arr3);
+        console.log('result', result);
+
+    </script>
+</body>
+</html>
