@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // Promise构造函数接受一个executor(),在实例化后立刻执行这个executor
+        // executor内部的异步任务放在宏/微任务队列，等待执行
+        // then执行，收集成功/失败回调，放入成功/失败队列
+        // executor 异步任务被执行，触发resolve/reject，从成功/失败队列中取出回调依次执行
+        class MyPromise {
+            _resolveQueue = [];
+            _rejectQueue = [];
+            // executor为一个函数，接受两个参数，一个resolve，一个reject，都是Promise构造函数内部传递的，这两个参数都能接受外界传递进来的值
+            constructor(executor) {
+                // resolve函数的作用，异步任务执行完成后，执行resolve函数，检测_resolve队列是否为空，取出回调函数执行
+                let _resolve = value => {
+                    console.log(this._resolveQueue);
+                    while(this._resolveQueue.length) {
+                        const callback = this._resolveQueue.shift()
+                        callback(value)
+                    }
+                }
+                let _reject = value => {
+                    while(this._rejectQueue.length) {
+                        const callback = this._rejectQueue.shift()
+                        callback(value)
+                    }
+                }
+                executor(_resolve, _reject);
+            }
+            // 先执行的是then函数,收集依赖
+            then(resolveFn, rejectFn) {
+                this._resolveQueue.push(resolveFn);
+                this._rejectQueue.push(rejectFn);
+            }
+        }
+        const myP1 = new MyPromise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('myPromise示例1')
+            }, 1000)
+        });
+        myP1.then(res => {
+            console.log(res);
+        })
+        
+    </script>
+</body>
+</html>

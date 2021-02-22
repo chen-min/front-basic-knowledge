@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    //    Promise本质是一个状态机，且状态只能为以下三种：Pending（等待态）、Fulfilled（执行态）、Rejected（拒绝态），状态的变更是单向的，只能从Pending -> Fulfilled 或 Pending -> Rejected，状态变更不可逆(resolve，reject只能执行一个)
+    //     then方法接收两个可选参数，分别对应状态改变时触发的回调。then方法返回一个promise。then 方法可以被同一个 promise 调用多次。
+        const PENDING = 'pending'
+        const FULFILLED = 'fulfilled'
+        const REJECTED = 'rejected'
+
+        class MyPromise {
+            _resolveQueue = [];
+            _rejectQueue = [];
+            status = PENDING;
+            // executor为一个函数，接受两个参数，一个resolve，一个reject，都是Promise构造函数内部传递的，这两个参数都能接受外界传递进来的值
+            constructor(executor) {
+                // resolve函数的作用，异步任务执行完成后，执行resolve函数，检测_resolve队列是否为空，取出回调函数执行
+                let _resolve = value => {
+                    if (this.status !== PENDING) return;
+                    this.status = FULFILLED
+                    while(this._resolveQueue.length) {
+                        const callback = this._resolveQueue.shift()
+                        callback(value)
+                    }
+                }
+                let _reject = value => {
+                    if (this.status !== REJECTED) return;
+                    this.status = REJECTED
+                    while(this._rejectQueue.length) {
+                        const callback = this._rejectQueue.shift()
+                        callback(value)
+                    }
+                }
+                executor(_resolve, _reject);
+            }
+            // 先执行的是then函数,收集依赖
+            // then(resolveFn, rejectFn) {
+            //     this._resolveQueue.push(resolveFn);
+            //     this._rejectQueue.push(rejectFn);
+            // }
+            // then方法
+            then(resolveFn, rejectFn) {
+                //return一个新的promise
+                return new MyPromise((resolve, reject) => {
+                    //把resolveFn重新包装一下,再push进resolve执行队列,这是为了能够获取回调的返回值进行分类讨论
+                    const fulfilledFn = value => {
+                        try {
+                            //执行第一个(当前的)Promise的成功回调,并获取返回值
+                            console.log('resolveFn', resolveFn);
+                            console.log('value', value);
+                            let x = resolveFn(value)
+                            console.log('x', x);
+                            // todo 遗留问题 简写
+                            //分类讨论返回值,如果是Promise,那么等待Promise状态变更,否则直接resolve
+                            //这里resolve之后，就能被下一个.then()的回调获取到返回值，从而实现链式调用
+                            // 如果return的是一个promise实例，则执行then方法，把结果resolve/reject出来 61-69行的代码可以简化成71行的
+                            // if (x instanceof MyPromise) {
+                            //     x.then(result => { // res即为promise里resolve的那个2
+                            //         resolve(result)
+                            //     }, reason => {
+                            //         reject(reason)
+                            //     })
+                            // } else {
+                            //     resolve(x);
+                            // }
+                            x instanceof MyPromise ? x.then(resolve, reject) : resolve(x)
+                        } catch (error) {
+                            reject(error)
+                        }
+                    }
+                    //把后续then收集的依赖都push进当前Promise的成功回调队列中(_rejectQueue), 这是为了保证顺序调用
+                    this._resolveQueue.push(fulfilledFn)
+
+                    //reject同理
+                    const rejectedFn  = error => {
+                        try {
+                            let x = rejectFn(error)
+                            x instanceof MyPromise ? x.then(resolve, reject) : resolve(x)
+                        } catch (error) {
+                            reject(error)
+                        }
+                    }
+                    this._rejectQueue.push(rejectedFn)
+                })
+            }
+        }
+        const p1 = new MyPromise((resolve, reject) => {
+            // resolve(1) // 直接resolve不行
+            setTimeout(() => {
+                resolve(1)
+            }, 500);
+        })
+
+        // p1
+        // .then(res => {
+        //     console.log('res', res)
+        //     // resolve(2)
+        //     return 2
+
+        //     //then回调中可以return一个Promise
+        //     // return new MyPromise((resolve, reject) => {
+        //     //     setTimeout(() => {
+        //     //         resolve(2)
+        //     //     }, 1000);
+        //     // })
+        // })
+        p1
+        .then(res => {
+            console.log('res1', res)
+            //then回调中可以return一个Promise
+            return new MyPromise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve(2)
+                }, 1000);
+            })
+        })
+        // .then(res => {
+        //     console.log('res2', res)
+        //     //then回调中也可以return一个值
+        //     return 3
+        // })
+        // .then(res => {
+        //     console.log('res3', res)
+        // })
+
+        // const p1 = new MyPromise((resolve, reject) => {
+        // setTimeout(() => {
+        //     resolve(1)
+        // }, 500);
+        // })
+
+        // p1
+        // .then(res => {
+        //     console.log(res)
+        //     return 2
+        // })
+        // .then(res => {
+        //     console.log(res)
+        //     return 3
+        // })
+        // .then(res => {
+        //     console.log(res)
+        // })
+
+        //输出 1 2 3
+    </script>
+</body>
+</html>

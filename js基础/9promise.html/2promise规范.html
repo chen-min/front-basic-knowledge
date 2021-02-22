@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+    //    Promise本质是一个状态机，且状态只能为以下三种：Pending（等待态）、Fulfilled（执行态）、Rejected（拒绝态），状态的变更是单向的，只能从Pending -> Fulfilled 或 Pending -> Rejected，状态变更不可逆(resolve，reject只能执行一个)
+    //     then方法接收两个可选参数，分别对应状态改变时触发的回调。then方法返回一个promise。then 方法可以被同一个 promise 调用多次。
+        const PENDING = 'pending'
+        const FULFILLED = 'fulfilled'
+        const REJECTED = 'rejected'
+
+        class MyPromise {
+            _resolveQueue = [];
+            _rejectQueue = [];
+            status = PENDING;
+            // executor为一个函数，接受两个参数，一个resolve，一个reject，都是Promise构造函数内部传递的，这两个参数都能接受外界传递进来的值
+            constructor(executor) {
+                // resolve函数的作用，异步任务执行完成后，执行resolve函数，检测_resolve队列是否为空，取出回调函数执行
+                let _resolve = value => {
+                    if (this.status !== PENDING) return;
+                    this.status = FULFILLED
+                    while(this._resolveQueue.length) {
+                        const callback = this._resolveQueue.shift()
+                        callback(value)
+                        console.log(this.status);
+                    }
+                }
+                let _reject = value => {
+                    if (this.status !== REJECTED) return;
+                    this.status = REJECTED
+                    while(this._rejectQueue.length) {
+                        const callback = this._rejectQueue.shift()
+                        callback(value)
+                    }
+                }
+                executor(_resolve, _reject);
+            }
+            // 先执行的是then函数,收集依赖
+            then(onFulfilled, onRejected) {
+                this._resolveQueue.push(onFulfilled);
+                this._rejectQueue.push(onRejected);
+            }
+        }
+        const myP1 = new MyPromise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('myPromise示例1')
+                reject('reject')
+            }, 1000)
+        });
+        myP1.then(res => {
+            console.log(res);
+        }, err => {
+            console.log('err', err);
+        })
+        
+    </script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 归并排序和快排的思路类似，都是递归分治，区别在于快排边分区边排序，而归并在分区完成后才会排序
+        // function mergeSort(arr) {
+        //     if(arr.length <= 1) return arr		//数组元素被划分到剩1个时，递归终止
+        //     const midIndex = arr.length/2 | 0
+        //     const leftArr = arr.slice(0, midIndex)
+        //     const rightArr = arr.slice(midIndex, arr.length)
+        //     return merge(mergeSort(leftArr), mergeSort(rightArr))	//先划分，后合并
+        // }
+
+        // //合并
+        // function merge(leftArr, rightArr) {
+        //     const result = []
+        //     while(leftArr.length && rightArr.length) {
+        //         leftArr[0] <= rightArr[0] ? result.push(leftArr.shift()) : result.push(rightArr.shift())
+        //     }
+        //     while(leftArr.length) result.push(leftArr.shift())
+        //     while(rightArr.length) result.push(rightArr.shift())
+        //     return result
+        // }
+        // let arr = [66,1,3,4,2,888,0];
+        // console.log(mergeSort(arr));
+
+        function merge(leftArr, rightArr){  
+            var result = [];  
+            while (leftArr.length > 0 && rightArr.length > 0){  
+            if (leftArr[0] < rightArr[0])  
+                result.push(leftArr.shift()); //把最小的最先取出，放到结果集中   
+            else   
+                result.push(rightArr.shift());  
+            }   
+            return result.concat(leftArr).concat(rightArr);  //剩下的就是合并，这样就排好序了  
+        }  
+
+        function mergeSort(array){  
+            if (array.length == 1) return array;  
+            var middle = Math.floor(array.length / 2);       //求出中点  
+            var left = array.slice(0, middle);               //分割数组  
+            var right = array.slice(middle);  
+            return merge(mergeSort(left), mergeSort(right)); //递归合并与排序  
+        }  
+
+        var arr = mergeSort([32,12,56,78,76,45,36]);
+        console.log(arr);   // [12, 32, 36, 45, 56, 76, 78]
+
+
+        // https://www.bilibili.com/video/BV1qv411t7ea?from=search&seid=685693886483547581
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 选取基准元素
+        // 比基准元素小的元素放到左边，大的放右边
+        // 在左右子数组中重复步骤一二，直到数组只剩下一个元素
+        // 向上逐级合并数组 
+
+        // 注意点： 递归终止条件
+
+        let arr = [66,1,3,4,2,888,0];
+        // 快排，从小到大
+        function quickSort (arr) {
+            if (arr.length <= 1) return arr;
+            const leftArr = [];
+            const rightArr = [];
+            let midIndex = Math.floor(arr.length / 2);
+            let itemMid = arr[midIndex];
+            const pivotValue = arr.splice(midIndex, 1)[0]
+            for (var i = 0; i < arr.length; i++) {
+                if(itemMid > arr[i]) {
+                    leftArr.push(arr[i])
+                } else {
+                    rightArr.push(arr[i])
+                }
+            }
+            return [ ...quickSort(leftArr), pivotValue, ...quickSort(rightArr)]
+            // return quickSort(leftArr).concat(quickSort(rightArr))
+        }
+        let myRes = quickSort(arr);
+        console.log('myRes', myRes);
+
+        // function quickSort(arr) {
+        //     if(arr.length <= 1) return arr          //递归终止条件
+        //     const pivot = arr.length / 2 | 0        //基准点
+        //     const pivotValue = arr.splice(pivot, 1)[0]
+        //     const leftArr = []
+        //     const rightArr = []
+        //     arr.forEach(val => {
+        //         val > pivotValue ? rightArr.push(val) : leftArr.push(val)
+        //     })
+        //     return [ ...quickSort(leftArr), pivotValue, ...quickSort(rightArr)]
+        // }
+        // let myRes = quickSort(arr);
+        // console.log('myRes', myRes);
+
+    </script>
+</body>
+</html>
