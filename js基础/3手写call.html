@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,13 +8,49 @@
 </head>
 <body>
     <script>
+        // function原型对象上的方法  改变this指向，并调用，接受参数依次为（context, ...arguments）
+        // 返回值: 目标对象调用函数的结果
+        // 思路，给目标对象添加属性，属性值为该该函数，
+        // 特殊处理：为保证属性的唯一性(采用Symbol)  call可以不传参数， 调用完成后，删除该属性。
+        
+
+
+
+
+
+
+
+
+
+        Function.prototype._call = function(context, ...arguments){
+            console.log('this', this);
+            context.fn = this;
+            context.fn(...arguments);
+        }
+        const name = 'window对象Name'
+        function sayHello() {
+            console.log('arguments', arguments);
+            console.log(`我是${this.name}`);
+        };
+        let person = {
+            name: 'Tom'
+        }
+        sayHello._call(person, '男')
+
+        // function argumentConsole(...args) {
+        //     const newArr = [...args];
+        //     // console.log(newArr); // [1,2,3]
+        //     // console.log(...args); // 1,2,3
+        //     // console.log(args); // [1,2,3]
+        //     // console.log(Array.isArray(args));
+        //     // console.log(newArr === args);
+        // }
+        // argumentConsole(1, 2, 3);
+        console.log('---------------------------');
+
         function foo(){
           console.log(this.name);  
         };
-        // function foo(){
-        //   console.log(this.name);  
-        // };
-
         const obj = {
             name: '蔡徐坤'
         };
@@ -43,6 +79,50 @@
         }
         //测试
         foo.myCallFinal(obj)     // 输出'写代码像蔡徐抻'
+
+
+        // eval写法
+        // 第三版
+        // Function.prototype.call2 = function (context) {
+        //     var context = context || window;
+        //     context.fn = this;
+
+        //     var args = [];
+        //     for(var i = 1, len = arguments.length; i < len; i++) {
+        //         args.push('arguments[' + i + ']');
+        //     }
+
+        //     var result = eval('context.fn(' + args +')');
+
+        //     delete context.fn
+        //     return result;
+        // }
+
+        // // 测试一下
+        // var value = 2;
+
+        // var obj = {
+        //     value: 1
+        // }
+
+        // function bar(name, age) {
+        //     console.log(this.value);
+        //     return {
+        //         value: this.value,
+        //         name: name,
+        //         age: age
+        //     }
+        // }
+
+        // bar.call2(null); // 2
+
+        // console.log(bar.call2(obj, 'kevin', 18));
+        // // 1
+        // // Object {
+        // //    value: 1,
+        // //    name: 'kevin',
+        // //    age: 18
+        // // }
     </script>
 </body>
 </html>

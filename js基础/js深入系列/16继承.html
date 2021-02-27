@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 1.原型链继承
+        /* 概念: 子类的原型指向父类的实例 
+         * 注意点: constructor会丢失
+         * 缺点：
+         * 1.引用类型的属性被所有实例共享，
+         * 2.在创建 Child 的实例时，不能向Parent传参
+         * */
+        function Parent() {
+            this.names = [];
+            this.work = function() {
+                console.log( 'make money');
+            }
+        }
+        function Child() {};
+        // const a = new Parent;
+        // console.log('a', a);
+        // console.log('a.constructor', a.constructor);
+        // constructor
+        Child.prototype = new Parent();
+        console.log('Child.prototype', Child.prototype);
+        console.log('Child.prototype.constructor', Child.prototype.constructor);
+        // console.log(Child.constructor); // ƒ Function() { [native code] }
+
+        Child.prototype.constructor = Child;
+        const child1 = new Child();
+        console.log('child1', child1);
+
+        // 2.借用构造函数
+        /* 定义：在子类中调用构造函数，可传参
+         * 缺点：
+         * 1、不能继承父类原型对象上的属性
+         * 2、方法都在构造函数中定义，无法复用。（https://segmentfault.com/q/1010000004846488）
+         * 优点：
+         * 1.避免了引用类型的属性被所有实例共享
+         * 2.可以在 Child 中向 Parent 传参
+         * */
+        // function Parent2() {
+        //     this.names = [];
+        //     this.work = function() {
+        //         console.log( 'make money');
+        //     }
+        // }
+        // function Child2() {
+        //     Parent.call(this, arguments)
+        // };
+
+        // 3.组合继承
+        /* 原型继承和构造继承的组合
+         * 优缺点：
+         *  - 👍 公有的写在原型
+            - 👍 私有的写在构造函数
+            - 👍 可以向父类传递参数
+            - ❌ 需要手动绑定 constructor
+            - ❌ 封装性一般
+            - ⚡ 重复调用父类性能损耗
+         * */
+        //  function Parent3() {
+        //     this.names = [];
+        //     this.work = function() {
+        //         console.log( 'make money');
+        //     }
+        // }
+        // Child3.prototype = new Parent3();
+        // Child3.prototype.constructor = Child3;
+        // function Child3() {
+        //     Parent.call(this, arguments)
+        // };
+        // const child3 = new Child3();
+        // console.log('child3', child3);
+
+        // 4.原型式继承
+        /* 
+            即ES6的 Object.create(),将传入对象作为生成对象的原型
+            缺点：
+            包含引用类型的属性值始终都会共享相应的值，这点跟原型链继承一样。
+        */
+        // function myCreate(target) {
+        //         function F(){}
+        //         F.prototype = o;
+        //         return new F();
+        // }
+        // var person = {
+        //     name: 'kevin',
+        //     friends: ['daisy', 'kelly']
+        // }
+
+        // var person1 = createObj(person);
+        // var person2 = createObj(person);
+
+        // person1.name = 'person1';
+        // console.log(person2.name); // kevin
+
+        // person1.firends.push('taylor');
+        // console.log(person2.friends); // ["daisy", "kelly", "taylor"]
+        // 注意：修改person1.name的值，person2.name的值并未发生改变，并不是因为person1和person2有独立的 name 值，而是因为person1.name = 'person1'，给person1添加了 name 值，并非修改了原型上的 name 值。
+
+        // 5.寄生式继承
+        /* 创建一个仅用于封装继承过程的函数，该函数在内部以某种形式来做增强对象，最后返回对象。
+        缺点：跟借用构造函数模式一样，每次创建对象都会创建一遍方法。
+        ##### ？？？👍 父类方法可以复用
+            👍 增加了别的属性和方法
+            ❌ 父类引用属性全部被共享, 原型链继承多个实例的引用类型属性指向相同，存在篡改的可能。
+            ❌ 子类不可传递参数给父类
+         */
+        function createObj(o) {
+            var clone = Object.create(o);
+            clone.sayName = function () {
+                console.log('hi');
+            }
+            return clone;
+        }
+        Parent4.prototype = {
+            name: 'Parent4'
+        }
+        function Parent4() {
+            this.names = [];
+            this.work = function() {
+                console.log( 'make money');
+            }
+        }
+        
+        const obj4 = createObj(Parent4);
+        console.log('obj4', obj4);
+
+        // 6.寄生组合继承
+        /* 那么我们该如何精益求精，避免这一次重复调用呢？
+        如果我们不使用 Child.prototype = new Parent() ，而是间接的让 Child.prototype 访问到 Parent.prototype 呢？
+        看看如何实现：不实例化父类了，创建一个中间类F，它的原型指向父类，
+        再让子类的原型指向中间类的实例
+        */
+        function Parent6 (name) {
+            this.name = name;
+            this.colors = ['red', 'blue', 'green'];
+        }
+        Parent6.prototype.getName = function () {
+            console.log(this.name)
+        }
+        function Child6 (name, age) {
+            Parent6.call(this, name);
+            this.age = age;
+        }
+        // 关键的三步
+        var F = function () {};
+        F.prototype = Parent6.prototype;
+        Child6.prototype = new F();
+
+        var child6 = new Child6('kevin', '18');
+        console.log(child6);
+
+        // 最后我们封装一下这个继承方法：
+
+        function object(o) {
+            function F() {}
+            F.prototype = o;
+            return new F();
+        }
+
+        function prototype(child, parent) {
+            var prototype = object(parent.prototype);
+            prototype.constructor = child;
+            child.prototype = prototype;
+        }
+
+        // 当我们使用的时候：
+        prototype(Child, Parent);
+    </script>
+</body>
+</html>
