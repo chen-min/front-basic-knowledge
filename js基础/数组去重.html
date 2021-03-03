@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+        
+        /* 
+         * 1.for循环
+         * 2.indexOf
+         * 3.sort
+         * ES5filter方法 + indexOf
+         * ES5filter方法 + sort
+         * Object 键值对 
+         * ES6 Set数据结构 它类似于数组，但是成员的值都是唯一的，没有重复的值。
+         */
+        // 1.思路： 双层for循环，函数中返回一个数组newArr，arr与newArr中每一项做比较，若有相同的，则j ！== resLen，即不会push元素进入newArr中
+        function unique1(arr) {
+            const res = [];
+            for (let i = 0, len = arr.length; i < len; i++) {
+                for (var k = 0, klen = res.length; k < klen; k++) {
+                    if(arr[i] === res[k]) break;
+                }
+                if (k === klen) {
+                    res.push(arr[i])
+                }
+            }
+            return res
+        };
+        let list = [1, 2, 3, 1, 2, 3]
+        const result = unique1(list);
+        console.log('result', result);
+
+        // 方法1.
+        // function unique(array) {
+        //     // res用来存储结果
+        //     var res = [];
+        //     for (var i = 0, arrayLen = array.length; i < arrayLen; i++) {
+        //         for (var j = 0, resLen = res.length; j < resLen; j++ ) {
+        //             if (array[i] === res[j]) {
+        //                 break;
+        //             }
+        //         }
+        //         console.log('j', j);
+        //         console.log('resLen', resLen);
+        //         // 如果array[i]是唯一的，那么执行完循环，j等于resLen
+        //         if (j === resLen) {
+        //             res.push(array[i])
+        //         }
+        //     }
+        //     return res;
+        // }
+
+        // console.log(unique(array)); // [1, "1"]
+
+        // 方法2 indexOf
+        function unique2(array) {
+            var res = [];
+            for(var i = 0, len = array.length; i < len; i++) {
+                var current = array[i];
+                if(res.indexOf(current === -1)) {
+                    res.push(current)
+                }
+            }
+            return res;
+        }
+        // string.includes(searchvalue, start)
+        let list2 = [4, 1, 2, 3, 1, 2, 3]
+        console.log('result2', unique1(list2));
+        // 排序后去重
+        // 试想我们先将要去重的数组使用 sort 方法排序后，相同的值就会被排在一起，然后我们就可以只判断当前元素与上一个元素是否相同，相同就说明重复，不相同就添加进 res，让我们写个 demo：
+        function unique2Sort(array) {
+            var newArr = array.concat().sort();
+            var res = [];
+            var previous;
+            for(var i = 0, len = newArr.length; i < len; i++) {
+                var current = newArr[i];
+                if (!i || current === previous) {
+                    res.push(current)
+                };
+                previous = current;
+            }
+            return res;
+        }
+        let list2Sort = [4, 1, 2, 3, 1, 2, 3]
+        console.log('result2Sort', unique1(list2Sort));
+
+        // 方法 ES5filter方法 + indexOf
+        // 利用indexOf返回首个出现元素的索引特性，与当前索引做对比
+        function unique3(array) {
+            var res = [];
+            array.filter((item, index) => {
+                if(array.indexOf(item) === index) {
+                    res.push(item)
+                }
+            })
+            return res;
+        }
+        let list3 = [4, 1, 2, 3, 1, 2, 3]
+        console.log('result3', unique3(list3));
+        
+        //  * ES5filter方法 + sort
+        // 排序去重的方法：
+        var list3Sort = [1, 2, 1, 1, '1'];
+        function uniqueSort3(array) {
+            return array.concat().sort().filter(function(item, index, array){
+                return !index || item !== array[index - 1]
+            })
+        }
+
+        console.log(uniqueSort3(list3Sort));
+        //  * Object 键值对, 
+        function unique4(arr) {
+            var res = [];
+            var obj = {};
+            return arr.filter((item, index, array) => {
+                // obj[item] = true 标记该item已在obj中存在过
+                return !obj.hasOwnProperty(item) ? (obj[item] = true) : false;
+            })
+        }
+        let list4 = [4, 1, 2, 3, 1, 2, 3]
+        console.log('result4', unique4(list4));
+        // 我们可以发现，是有问题的，因为 1 和 '1' 是不同的，但是这种方法会判断为同一个值，这是因为对象的键值只能是字符串，所以我们可以使用 typeof item + item 拼成字符串作为 key 值来避免这个问题
+        // var array = [1, 2, 1, 1, '1'];
+
+        // function unique(array) {
+        //     var obj = {};
+        //     return array.filter(function(item, index, array){
+        //         return obj.hasOwnProperty(typeof item + item) ? false : (obj[typeof item + item] = true)
+        //     })
+        // }
+        // console.log(unique(array)); // [1, 2, "1"]
+        // 然而，即便如此，我们依然无法正确区分出两个对象，比如 {value: 1} 和 {value: 2}，因为 typeof item + item 的结果都会是 object[object Object]，不过我们可以使用 JSON.stringify 将对象序列化
+
+        // var array = [{value: 1}, {value: 1}, {value: 2}];
+        // function unique(array) {
+        //     var obj = {};
+        //     return array.filter(function(item, index, array){
+        //         console.log(typeof item + JSON.stringify(item))
+        //         return obj.hasOwnProperty(typeof item + JSON.stringify(item)) ? false : (obj[typeof item + JSON.stringify(item)] = true)
+        //     })
+        // }
+        // console.log(unique(array)); // [{value: 1}, {value: 2}]
+
+        //  * ES6 Set数据结构 它类似于数组，但是成员的值都是唯一的，没有重复的值
+        // function uniqueSet(arr) {
+        //     Array.from(new Set(arr));
+        // }
+        // function uniqueSet(arr) {
+        //     [...new Set(arr)]
+        // }
+        // var unique = a => [...new Set(a)]
+        // var array = [1, 2, 1, 1, '1'];
+        // console.log(unique(array)); // [1, 2, "1"]
+        //  todo 特殊类型比较 Map数据结构 我特地整理了一个列表，我们重点关注下对象和 NaN 的去重情况： https://github.com/mqyqingfeng/Blog/issues/27
+        // map
+        function unique (arr) {
+            const seen = new Map()
+            return arr.filter((a) => !seen.has(a) && seen.set(a, 1))
+        }
+    </script>
+</body>
+</html>

@@ -9,6 +9,70 @@
 <body>
     <div id="app" >11111</div>
     <script>
+
+
+
+        // 指定时间内只会触发一次
+
+        // function myThrottle(fn, duration) {
+        //     var timerId = null;
+        //     return function() {
+        //         const context = this;
+        //         let args = arguments
+        //         // if(!timerId) {
+        //         //     timerId = setTimeout(() => {
+        //         //         timerId = null
+        //         //         fn.apply(context, args)
+        //         //     }, duration)
+        //         // }
+        //         if(timerId) return;
+        //         timerId = setTimeout(() => {
+        //             console.log('args', args);
+        //             timerId = null;
+        //             // clearInterval(timerId) // 这样写不行
+        //             fn(context, args)
+        //         }, duration)
+        //     }
+        // }
+
+        function myThrottle(fn, duration) {
+            let a = +new Date();
+            console.log('a', a);
+            // console.log('a.getTime(', a.getTime());
+            let previous = new Date().getTime();
+            return function() {
+                const context = this;
+                let args = arguments
+                let now = new Date().getTime();
+                if((now - previous) >= duration) {
+                    fn(context, args)
+                    previous = now;
+                }
+            }
+        }
+
+        document.getElementById('app').onclick = myThrottle(function (){
+            console.log('节流');
+        }, 1000)
+
+        // https://github.com/mqyqingfeng/Blog/issues/26
+        
+        // 运算符new的优先级高于一元运算符+，所以过程可以分解为：
+        // var time=new Date()；
+        // +time
+        // 2.根据上面提到的规则相当于：ToNumber(time)
+
+        // 3.time是个日期对象，根据ToNumber的转换规则，所以相当于：ToNumber(ToPrimitive(time))
+
+        // 4.根据ToPrimitive的转换规则：ToNumber(time.valueOf())，time.valueOf()就是 原始值 得到的是个时间戳，假设time.valueOf()=1503479124652
+
+        // 5.所以ToNumber(1503479124652)返回值是1503479124652这个数字。
+
+        // 6.分析完毕，从原理得出结果，而不是从浏览器输出的结果来解释结果。用结论解释结论，会忽略很多细节，装个逼，逃，233333
+
+
+
+
         // 节流throttle: 让事件的回调一定时间间隔只执行一次。
         // 防抖是延迟执行，而节流是间隔执行，函数节流即每隔一段时间就执行一次，实现原理为设置一个定时器，约定xx毫秒后执行事件，如果时间到了，那么执行函数并重置定时器，和防抖的区别在于，防抖每次触发事件都重置定时器，而节流在定时器到时间后再清空定时器
         // 前端开发过程中，有一些事件或者函数，会被频繁地触发（短时间按内多次触发），最常见的例如，onresize，scroll，mousemove ,mousehover 等，这些事件的触发频率很高，不做限制的话，有可能一秒之内执行几十次、几百次，如果在这些函数内部执行了其他函数，尤其是执行了操作 DOM 的函数（浏览器操作 DOM 是很耗费性能的），那不仅会造成计算机资源的浪费，还会降低程序运行速度，甚至造成浏览器卡死、崩溃。这种问题显然是致命的。
@@ -45,9 +109,9 @@
             }
         }
 
-        document.getElementById('app').onclick = throttle(1000, function() {
-            console.log('sssss');
-        })
+        // document.getElementById('app').onclick = throttle(1000, function() {
+        //     console.log('sssss');
+        // })
 
     </script>
 </body>
