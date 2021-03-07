@@ -77,7 +77,7 @@ arrayLike.push('4');
 
 既然无法直接调用，我们可以用 Function.call 间接调用：
 
-```
+```json
 var arrayLike = {0: 'name', 1: 'age', 2: 'sex', length: 3 }
 
 Array.prototype.join.call(arrayLike, '&'); // name&age&sex
@@ -95,7 +95,7 @@ Array.prototype.map.call(arrayLike, function(item){
 
 在上面的例子中已经提到了一种类数组转数组的方法，再补充三个：
 
-```
+```js
 var arrayLike = {0: 'name', 1: 'age', 2: 'sex', length: 3 }
 // 1. slice
 Array.prototype.slice.call(arrayLike); // ["name", "age", "sex"] 

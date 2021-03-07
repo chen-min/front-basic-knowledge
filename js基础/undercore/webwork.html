@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+    <p>Count numbers:
+        <output id="result"></output>
+    </p>
+    <button onclick="startWorker()">Start Worker</button>
+    <button onclick="stopWorker()">Stop Worker</button>
+    <script>
+    var w;
+
+    function startWorker() {
+        if (typeof(Worker) !== "undefined") {
+            if (typeof(w) == "undefined") {
+                w = new Worker("./index.js");
+            }
+            w.onmessage = function(event) {
+                document.getElementById("result").innerHTML = event.data;
+            }
+        }
+        else {
+            document.getElementById("result").innerHTML = "Sorry, your browser does not support Web Workers...";
+        }
+    }
+
+    function stopWorker() {
+        w.terminate();
+    }
+    (function(){
+        // console.log('global', global); // Window
+        // console.log('self', self); // Window
+        // console.log('self.self', self.self); // Window
+        var root = (typeof self == 'object' && self.self == self && self) ||
+           (typeof global == 'object' && global.global == global && global);
+
+        var _ = {};
+
+        root._ = _;
+
+        // 在这里添加自己的方法
+        _.reverse = function(string){
+            return string.split('').reverse().join('');
+        }
+        console.log('root', root); // Window
+
+    })()
+    </script>
+</body>
+
+</html>
