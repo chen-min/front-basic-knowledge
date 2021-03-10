@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- <script src="../../node_modules/underscore/underscore.js" ></script> -->
+    <script>
+        // import moduleName from '../'
+        // var _ = 
+        var _ = function(obj) {
+            if(!(this instanceof _)) return new _(obj);
+            this._wrapped = obj;
+        }
+        // _.chain = function(obj) {
+        //     var instance = _(obj);
+        //     instance._chain = true;
+        //     return instance;
+        // }
+        
+        _.prototype.loga = function() {
+            console.log('aaaaaaaaa');
+            // return chainResult(this, this._wrapped)
+        };
+        _.prototype.logb = function() {
+            console.log('bbbbbbbbb');
+        };
+        // var res1 = _.chain([1, 2, 3, 4])
+        // // console.log(_);
+        // console.log(res1);
+        // console.log(res1._wrapped);
+        // 每次调用方法后，都把最新的结果返回出去。
+        // v1 push
+        // _.prototype._push = function(item) {
+        //     // this.push(item);
+        //     this._wrapped.push(item);
+        //     return this._wrapped;
+        // }
+       
+        _.prototype.shift = function(num) {
+            this._wrapped.shift()
+            return this._wrapped
+        }
+        _.shift = function(num) {
+            this._wrapped.shift()
+            return this._wrapped
+        }
+
+        // var res = _.chain([1, 2, 3, 4]);
+        // console.log(res);
+        // console.log('typeof res', typeof res);
+        // var res2 = res._push(5)
+        // // var res22 = res2.shift(); // 报错
+        // // 只能将返回的结果再次传入到chain函数中才行
+        // var res = _.chain([1, 2, 3]).push(4);
+        // // 将上一个函数的返回值，传入 _.chain，然后再继续调用其他函数
+        // var res2 = _.chain(res).shift();
+
+        // 为方便链式调用，写一个函数进行判断，_chain为true返回
+        // _.chain(obj) 否则返回obj
+        // v2 push
+        // var chainResult = function(instance, obj) {
+        //     return instance._chain ?  _.chain(obj) : obj;
+        // }
+        _.chain = function(obj) {
+            var instance = _(obj);
+            instance._chain = true;
+            return instance;
+        }
+        var chainResult = function (instance, obj) {
+            return instance._chain ? _(obj).chain() : obj;
+        };
+
+        _.push = function(item) {
+            // this.push(item);
+            // debugger
+            this._wrapped.push(item);
+            // return chainResult(this, this._wrapped);
+        }
+        // _.prototype.push = function(item) {
+        //     // this.push(item);
+
+        //     this._wrapped.push(item);
+        //     // return chainResult(this, this._wrapped);
+        // }
+        // var res3 = _.chain([1,2]).push(3).push(4).loga()
+        // var res33 = _([1,2]).push(3); // 返回的是Array实例
+        // var res33 = res33.loga(); // res33.loga is not a function
+        // console.log('res3', res3);
+        // console.log('res33', res33);
+
+        // _.chain链式调用原理就是这样，可是这样的话，我们需要对每个函数都进行修改呀……
+        // 幸运的是，在 underscore 中，所有的函数是挂载到 _ 函数对象中的，_.prototype 上的函数是通过 _.mixin 函数将 _ 函数对象中的所有函数复制到 _.prototype 中的。
+        var ArrayProto = Array.prototype;
+        var push = ArrayProto.push;
+        _.isFunction = (obj) => {
+            return typeof(obj) === "function";
+        }
+        _.functions = (obj) => {
+            const names = [];
+            for(let key in obj) {
+                if(_.isFunction(obj[key])) names.push(key)
+            }
+            console.log('names', names);
+            return names;
+        }
+        _.each = each;
+        // _.mixin = function(obj) {
+        //     _.each(_.functions(obj), (index, name) => {
+        //         var func = _[name] = obj[name];
+        //         console.log(111);
+
+        //         _.prototype[name] = function() {
+        //             var args = [this._wrapped];
+        //             push.apply(args, arguments);
+        //             let res = func.apply(_, args);
+        //             console.log('res', res);
+        //             debugger
+        //             _.prototype[name].aaa = 'aaa'
+
+        //             return chainResult(this, res)
+        //         }
+        //     }) 
+        //     return _;
+        // }
+        _.mixin = function(obj) {
+            // _.each(_.functions(obj), function(name) {
+            // 第一个参数为 index，第二个为值
+            _.each(_.functions(obj), function(index, name) {
+                // console.log('name', name);
+                var func = _[name] = obj[name];
+                _.prototype[name] = function() {
+                    console.log(111111);
+                    var args = [this._wrapped];
+                    push.apply(args, arguments);
+                    return chainResult(this, func.apply(_, args));
+                    // return chainResult(this, func.apply(this, args));
+                };
+            });
+            return _;
+        };
+        _.mixin(_)
+        // console.log(_.chain([1]));
+        console.log(_.chain([1, 2, 3]));
+        // console.dir(_.push);
+        // _.chain([1]).push(2).logb().push(3).logb()
+        // _.chain([1]).push(2).logb()
+        console.log(_.chain([1, 2, 3]).push(4).shift());
+        // .push(3).logb()
+        // var res1 = _.chain([1, 2, 3, 4])
+        // .filter(function(num) { return num % 2 == 0; })
+        // .map(function(num) { return num * num })
+        // .value(); // [4, 16]
+        // console.log(res1);
+
+
+        function each(obj, callback) {
+            var length, i = 0;
+            console.log('obj', obj);
+
+            if (Array.isArray(obj)) {
+                length = obj.length;
+                for (; i < length; i++) {
+                    if (callback.call(obj[i], i, obj[i]) === false) {
+                        break;
+                    }
+                }
+            } else {
+                for (i in obj) {
+                    if (callback.call(obj[i], i, obj[i]) === false) {
+                        break;
+                    }
+                }
+            }
+
+            return obj;
+        }
+    </script>
+</body>
+</html>

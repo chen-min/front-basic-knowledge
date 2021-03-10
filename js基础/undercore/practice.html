@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script src="./underscore1.9.0.js" ></script>
+    <script>
+        // each方法
+        // console.log('each方法----------');
+        // var arrEach = ['a', 'b', 'c'];
+        // _.each(arrEach, (item, index, array) => {
+        //     console.log('item', item);
+        //     console.log('index', index);
+        //     // console.log('array', array);
+        // })
+
+        // map方法
+        console.log('map方法----------');
+        // 基础用法
+        var mapObj = {name: '哈哈哈map对象'}
+        var mapReturnRes = _.map([11,22,33], function(value, index, array) {
+            // console.log('value', value); // 11
+            // console.log('index', index); // 1
+            // console.log('array', array); // [11,22,33]
+            // console.log('this.name', this.name); // '哈哈哈map对象'
+            return value * 2; 
+        }, mapObj)
+        console.log('mapReturnRes', mapReturnRes); // [22, 44, 66]
+
+        // 2.传入对象
+        console.log(_.map([1,2,3])); // [1, 2, 3]
+        var resultOBJ = _.map([{name:'Kevin'}, {name: 'Daisy', age: 18}], {name: 'Daisy'}); 
+        console.log('resultOBJ', resultOBJ); // [false, true]
+        // ↑ 返回是否包含这样的键值对的布尔值
+        // 3.传入基本类型
+        var resultName = _.map([{name: 'Kevin'}, {name: 'Daisy'},{age: 18}], 'name'); 
+        console.log('resultName', resultName); // ['Kevin', 'daisy', undefined]
+        // 4.传入数组
+        var person1 = {
+            child: {
+                nickName: 'Kevin'
+            }
+        }
+        var person2 = {
+            child: {
+                nickName: 'Daisy'
+            }
+        }
+        var resultNameArr = _.map([person1, person2], ['child', 'nickName']); 
+        console.log('resultNameArr', resultNameArr); // ['Kevin', 'daisy']
+        // ↑ 返回每个元素的name属性对应的值
+        
+        // _.iteratee = function(value, context) {
+        //     if (typeof value === 'function') {
+        //         // return function() {
+        //         return function(...rest) {
+        //             // console.log('rest', rest); // [3, 2, Array(3)]
+        //             // console.log('arguments', arguments); // Arguments(3) [1, 0, Array(3), callee: ƒ, Symbol(Symbol.iterator): ƒ]
+        //             // value.call(context, arguments) // call
+        //             // 忘记写return了
+        //             // return value.call(context, arguments)
+        //             return value.call(context, ...rest)
+        //         }
+        //     };
+        //     return function(value) {
+        //         return value;
+        //     }
+        // }
+        console.log(_.map([1,2,3], 'name')); // [1, 2, 3]
+        console.log(_.map([1,2,3], function(item){
+            console.log('item22', item);
+            return item + 1;
+        })); // [2,3,4]
+        // 如果不解构
+        // item222 就是 Arguments(3) [1, 0, Array(3), callee: ƒ, Symbol(Symbol.iterator): ƒ]
+        //  得到的是["[object Arguments]1", "[object Arguments]1", "[object Arguments]1"]
+    </script>
+</body>
+</html>
