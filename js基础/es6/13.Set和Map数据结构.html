@@ -11,38 +11,42 @@
         const s = new Set();
         [2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
         console.log(s);
-        // for (let i of s) {
+        // for (var i of s) {
         //     console.log(i);
         // }
 
-        let set = new Set(['red', 'green', 'blue']);
+        var set = new Set(['red', 'green', 'blue']);
         console.log('set.keys()', set.keys());
         console.log('set.values()', set.values());
         console.log('set.entries()', set.entries());
-        for (let item of set.keys()) {
+        for (var item of set.keys()) {
         console.log(item);
         }
         // red
         // green
         // blue
 
-        for (let item of set.values()) {
+        for (var item of set.values()) {
         console.log(item);
         }
         // red
         // green
         // blue
 
-        for (let item of set.entries()) {
+        for (var item of set.entries()) {
         console.log(item);
         }
         // ["red", "red"]
         // ["green", "green"]
         // ["blue", "blue"]
 
-        let set3 = new Set([1, 2, 3]);
+        var set3 = new Set([1, 2, 3]);
         set3 = new Set(Array.from(set3, val => val * 2));
         console.log('set3', set3);
+
+        var set = new Set(['a', 'b', 'c']);
+        console.log(set.entries()); // SetIterator {"a", "b", "c"}
+        console.log([...set.entries()]); // [["a", "a"], ["b", "b"], ["c", "c"]]
     </script>
 </body>
 </html>

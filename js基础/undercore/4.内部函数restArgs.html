@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function restArgs(func) {
+            console.log('func', func);
+            console.log('func.length', func.length);
+            return function () {
+                console.log('arguments', arguments);
+                // startIndex 表示使用哪个位置的参数用于储存剩余的参数
+                var startIndex = func.length - 1; // 2
+                // 以剩余参数长度建立数组
+                var length = arguments.length - startIndex; // 4
+
+                var rest = Array(length)
+                var index = 0;
+
+                // 使用一个数组储存剩余的参数
+                // 以上面的例子为例，结果为：
+                // rest [3, 4, 5, 6]
+                for (; index < length; index++) {
+                    rest[index] = arguments[index + startIndex]
+                }
+
+                // 新建预置参数与上面数组形成的一个数组 args [1, 2, empty]
+                var args = Array(startIndex + 1);
+                for (index = 0; index < startIndex; index++) {
+                    args[index] = arguments[index]
+                }
+                console.log('args', args);
+
+                // args [1, 2, [3, 4, 5, 6]]
+                args[startIndex] = rest;
+
+                return func.apply(this, args)
+            }
+        }
+        var func = restArgs(function(a, b, c){
+            console.log(c); // [3, 4, 5,6]
+        })
+
+        func(1, 2, 3, 4, 5, 6)
+
+    </script>
+</body>
+
+</html>

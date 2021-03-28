@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 迭代器是一个对象，有next方法，每次调用返回一个对象，value为对象的值，done返回是否迭代
+        var obj = [1,2,3];
+        // function createIterator(obj) {
+        //     const len = obj.length;
+        //     var position = 0;
+        //     return {
+        //         next: function() {
+        //             var done = position >= len
+        //             var value = !done ? obj[position++] : undefined;
+        //             return {
+        //                 value,
+        //                 done 
+        //             }
+        //         }
+        //     }
+        // }
+        function createIterator(array) {
+            var nextIndex = 0;
+            return {
+                next:function() {
+                    // return {
+                    //     done: i >= obj.length,
+                    //     value: !done ? obj[i++] : undefined
+                    // }
+                    return nextIndex < array.length ?
+                    {value: array[nextIndex++], done: false} :
+                    {value: undefined, done: true};
+                }
+            }
+        }
+        var test = createIterator(obj);
+        var res1 = test.next();
+        console.log('res1', res1);
+        var res2 = test.next();
+        console.log('res2', res2);
+        var res3 = test.next();
+        console.log('res3', res3);
+        var res4 = test.next();
+        console.log('res4', res4);
+
+        var colors = ["red", "green", "blue"];
+        
+        colors[Symbol.iterator] = function() {
+            return createIterator([1, 2, 3]);
+        };
+
+        // for (let color of colors) {
+        //     console.log(color);
+        // }
+        console.log('colors.keys()', colors.keys());
+        for (let color of colors.keys()) {
+            console.log(color);
+        }
+    </script>
+</body>
+</html>

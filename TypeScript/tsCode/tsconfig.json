@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist",
+        "target": "ES5",
+        "watch": true,
+        // "lib": [
+        //     "es2015"
+        // ],
+        "strictNullChecks": true,
+        "noImplicitAny": true
+    },
+    "include": [
+        "./src/**/*"
+    ]
+}
