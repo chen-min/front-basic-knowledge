@@ -6,10 +6,26 @@
         // "lib": [
         //     "es2015"
         // ],
+        "strict": false,
         "strictNullChecks": true,
-        "noImplicitAny": true
+        "experimentalDecorators": true,
+        // "noImplicitAny": true // 不许隐式声明any类型
+        "noImplicitAny": false // 不许隐式声明any类型
     },
     "include": [
         "./src/**/*"
     ]
+    // "strict": true todo
 }
+
+// {
+//     "compilerOptions": {
+//         "outDir": "./dist",
+//         "target": "es5",
+//         "strictNullChecks": true,
+//         "noImplicitAny": true,
+//         "experimentalDecorators": true,
+//         "emitDecoratorMetadata": true
+//     },
+//     "include": ["./src/**/*"]
+// }
