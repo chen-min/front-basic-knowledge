@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        let aArray = ['a',123,{a:'1',b:'2'}];
+        aArray.name = 'demo';
+        for(let index in aArray){
+            console.log(`${aArray[index]}`); //Notice!!aArray.name也被循环出来了
+        }
+        for(var value of aArray){
+            console.log(value);
+        }
+        // https://segmentfault.com/q/1010000006658882
+        // for in 遍历对象的Key
+        // 作用于数组的for-in循环除了遍历数组元素以外,还会遍历自定义属性。
+
+        // for...of循环不会循环对象的key，只会循环出数组的value，因此for...of不能循环遍历普通对象,对普通对象的属性遍历推荐使用for...in
+
+        // 如果实在想用for...of来遍历普通对象的属性的话，可以通过和Object.keys()搭配使用，先获取对象的所有key的数组
+    </script>
+</body>
+</html>

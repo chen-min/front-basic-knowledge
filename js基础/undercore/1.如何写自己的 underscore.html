@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        function each(obj, callback) {
+            var length, i = 0;
+
+            if (Array.isArray(obj)) {
+                length = obj.length;
+                for (; i < length; i++) {
+                    if (callback.call(obj[i], i, obj[i]) === false) {
+                        break;
+                    }
+                }
+            } else {
+                for (i in obj) {
+                    if (callback.call(obj[i], i, obj[i]) === false) {
+                        break;
+                    }
+                }
+            }
+
+            return obj;
+        }
+
+        // v1
+        // (function() {
+        //     var root = (window && window.window === window && window) || (
+        //         global && global.global === global && global
+        //     ) || this || {};
+        //     var _ = {};
+        //     root._ = _;
+        //     console.log('root', root);
+        //     _.log1 = function() {
+        //         console.log(1);
+        //     }
+        // })()
+        // _.log1()
+
+        // 面向对象 
+        // 函数式风格
+        // _.each([1, 2, 3], function(item){
+        //     console.log(item)
+        // });
+
+        // // 面向对象风格
+        // _([1, 2, 3]).each(function(item){
+        //     console.log(item)
+        // });
+        // 证明_不只是一个字面量，而是一个函数
+        // v2
+        // (function() {
+        //     var root = (window && window.window === window && window) || (
+        //         global && global.global === global && global
+        //     ) || this || {};
+        //     var _ = function() {};
+        //     root._ = _;
+        //     console.log('root', root);
+        //     _.log1 = function() {
+        //         console.log(1);
+        //     }
+        // })()
+        // 即_([1, 2, 3]) 返回的对象是如何调用 函数_上的方法(.each)的呢？
+        // _.log1()
+        // 1、使_(obj) 返回的对象为 _构造函数的实例
+        // 2、拷贝_构造函数上的所有函数 到 _.prototype上一份，即可_([1, 2, 3]).each
+        // v3
+        // (function() {
+        //     var root = (window && window.window === window && window) || (
+        //         global && global.global === global && global
+        //     ) || this || {};
+        //     var _ = function (obj) { 
+        //         // if(!obj instanceof _) return new _(obj); // 少括号
+        //         // if(!(obj instanceof _)) return new _(obj); // 是this，不是obj
+        //         if(!(this instanceof _)) return new _(obj);
+        //         this.wrapped = obj;
+        //     };
+        //     root._ = _;
+        //     console.log('root', root);
+        //     _.log1 = function() {
+        //         console.log(1);
+        //     }
+        // })()
+        // console.log(_([1, 2, 3]));
+
+        // v4
+        (function() {
+            var root = (window && window.window === window && window) || (
+                global && global.global === global && global
+            ) || this || {};
+            var _ = function (obj) { 
+                // if(!obj instanceof _) return new _(obj); // 少括号
+                // if(!(obj instanceof _)) return new _(obj); // 是this，不是obj
+                if(!(this instanceof _)) return new _(obj);
+                this._wrapped = obj;
+            };
+            root._ = _;
+            console.log('root', root);
+            _.isFunction = (obj) => {
+                return typeof(obj) === "function";
+            }
+            _.functions = (obj) => {
+                const names = [];
+                for(let key in obj) {
+                    if(_.isFunction(obj[key])) names.push(key)
+                }
+                return names;
+            }
+            _.each = each;
+            _.log1 = function() {
+                console.log(1);
+            }
+            var ArrayProto = Array.prototype;
+            var push = ArrayProto.push;
+            _.mixin = function(obj) {
+                // 回调函数拥有两个参数：第一个为对象的成员或数组的索引，第二个为对应变量或内容。
+                _.each(_.functions(obj), (index, name) => {
+                    // console.log('item', item);
+                    var func = _[name] = obj[name];
+                    // _.prototype[name] = func; // 需要考虑context、args
+                    // arg包含之前传入的对象
+                    // var args = [this._wrapped];
+                    // args.push(arguments);
+                    // console.log('args', args);
+                    // _.prototype[name] = func.apply(_, args);
+
+                    _.prototype[name] = function() {
+                        var args = [this._wrapped];
+                        // args.push(arguments); // 不能直接push arguments(类似组对象, 因为arguments包含 callee、而是把arguments转成数字，再push
+                        push.apply(args, arguments); // [1, 2, 3]
+                        // args.push(...arguments); // [1, 2, 3]
+                        // console.log('arguments', arguments);
+                        console.log('args', args);
+                        console.dir( _);
+                        return func.apply(_, args);
+                    }
+                }) 
+                console.log(_.functions(_));
+            }
+            _.mixin(_)
+            _.mixin({
+                addOne: function(num) {
+                    return num + 1;
+                }
+            });
+        })()
+        // console.log(_(2).addOne(4));
+        // console.log(_([1, 2, 3]));
+        // _(1).log1(444);
+        _([1, 2, 3]).log1(444);
+
+        // var a = [1, 2, 3];
+        // var b = [666]
+        // function test() {
+        //     // a.push(arguments);
+        //     Array.prototype.push.apply(b, arguments); // [1, 2, 3]
+        //     console.log('a', a);
+        //     console.log('b', b);
+        // }
+        // test(a)
+
+        var arrayLike = {0: 'name', 1: 'age', 2: 'sex', length: 3 }
+        // 1. slice
+        // Array.prototype.slice.call(arrayLike); // ["name", "age", "sex"] 
+        // 2. splice
+        // Array.prototype.splice.call(arrayLike, 0); // ["name", "age", "sex"] 
+        // 3. ES6 Array.from
+        // Array.from(arrayLike); // ["name", "age", "sex"] 
+        // 4. apply
+        console.log('--------');
+        // console.log(Array.prototype.concat.apply([1], arrayLike));
+        // console.log(Array.prototype.push.apply([1], arrayLike)); // 不行，返回的是push之后的长度
+        // console.log('arrayLike', arrayLike);
+    </script>
+</body>
+</html>

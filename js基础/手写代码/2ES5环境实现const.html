@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // Object.defineProperty(obj, prop, desc)
+        function _const(key, value) {
+            const desc = {
+                value,
+                writable: false
+            };
+            Object.defineProperty(window, key, desc);
+        };
+        _const('obj', {a: 111});
+        console.log(obj);
+        obj.b = 2               //可以正常给obj的属性赋值
+        obj = {};            //无法赋值新对象
+        // console.log(window.obj);
+    </script>
+</body>
+</html>

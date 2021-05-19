@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 改变this指向， 创建空对象obj， 实例继承属性, 调用构造函数，
+        // 1 obj.__proto__ = Construtor.prototype
+        // 2 直接拷贝构造函数的原型对象，const obj = Object.create(foo.prototype)
+        // 特殊考虑 构造函数有返回值,则
+        // 
+        const ttt = function() {
+            console.log(this.name);
+        }
+        ttt.prototype = {
+            name: 'ttt'
+        }
+        function myNew(consFn, ...otherArgs) {
+            // const obj = {};
+            let obj = Object.create(foo.prototype);
+            
+            return obj;
+        }
+        const myNewer = myNew(ttt)
+        console.log('myNewer', myNewer);
+        console.log('-------——————————————————————');
+        // new是关键字,这里我们用函数来模拟,new Foo(args) <=> myNew(Foo, args)
+        // function myNew(foo, ...args) {
+        //     // 创建新对象,并继承构造方法的prototype属性, 这一步是为了把obj挂原型链上, 相当于obj.__proto__ = Foo.prototype
+        //     let obj = Object.create(foo.prototype)  
+        //     console.log('obj', obj);
+        //     console.log('args', args);
+        //     // 执行构造方法, 并为其绑定新this, 这一步是为了让构造方法能进行this.name = name之类的操作, args是构造方法的入参, 因为这里用myNew模拟, 所以入参从myNew传入
+        //     let result = foo.apply(obj, args)
+
+        //     // 如果构造方法已经return了一个对象，那么就返回该对象，否则返回myNew创建的新对象（一般情况下，构造方法不会返回新实例，但使用者可以选择返回新实例来覆盖new创建的对象）
+        //     return Object.prototype.toString.call(result) === '[object Object]' ? result : obj
+        // }
+
+        // // 测试：
+        // function Foo(name) {
+        //     this.name = name
+        // }
+        // const newObj = myNew(Foo, 'zhangsan')
+        // console.log(newObj)                 // Foo {name: "zhangsan"}
+        // console.log(newObj instanceof Foo)  // true
+
+        function Person(name, gender) {
+            this.name = name;
+            this.gender = gender;
+            return {
+                a:111
+            }
+        }
+        function myNew(father, ...args) {
+            let obj = Object.create(father.prototype);
+            console.log(obj);
+            let result = father.apply(obj, args);
+            // console.log(Object.prototype.toString.call(result));
+            return Object.prototype.toString.call(result) === '[object Object]' ? result : obj;
+            return typeof(result) === 'object' ? result : obj;
+        }
+        let myNewObj = myNew(Person, '黎明', '男')
+        console.log('myNewObj', myNewObj);
+
+        // 第二版的代码
+        // https://github.com/mqyqingfeng/Blog/issues/13
+        function objectFactory() {
+            var obj = new Object(),
+            Constructor = [].shift.call(arguments);
+            obj.__proto__ = Constructor.prototype;
+            var ret = Constructor.apply(obj, arguments);
+
+            return typeof ret === 'object' ? ret : obj;
+
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app" >11111</div>
+    <script>
+        // 类比生活中坐电梯，每上一个人，需要重新等待才能关门上行
+        // 应用场景 函数防抖的应用场景：输入框搜索自动补全事件，频繁操作点赞和取消点赞等等。
+        
+        // 持续触发事件时，一定时间段内没有再次触发该事件，则事件才会执行一次，如果该时间段内又触发了此事件，则重新开始延时，
+        // 思路1. 设置一个全局的定时器timer延时执行，执行函数每次将timer清空，达到只执行最后一次事件的目的
+        function myDebounce(fn, wait = 1500) {
+            var timerId;
+            return function() {
+                const that = this;
+                // timerId = null; // 不管用
+                if (timerId) clearTimeout(timerId)
+                timerId = setTimeout(() => {
+                    console.log('只执行最后一次函数');
+                    fn && fn.call(this, arguments)
+                }, wait)
+            }
+        }
+        document.querySelector('#app').onclick = myDebounce(null, 1000)
+        // document.getElementById('app').onclick = myDebounce(null, 1000)
+
+        // https://zhuanlan.zhihu.com/p/72988470
+
+        // clearInterval(timer)的作用只是将定时器停止，但是timer对象本身还是存在的，timer的值是一个ID，比如这样就可以重启：
+        // 所以，clearInterval(timer)达到保留对象的作用以便于再次使用这个ID对应的定时器，但是如果是timer=null;虽然也同样达到停止的效果，但是本身的timer对象ID已经被清空了，timer会被系统回收，无法再次启动原来的timer；再次使用需要重新定义一个新对象var timer=setInterval(function(){abc()},3000);但这个ID值不等于上一个的timer值，这里是两个timer,不相等，个人感觉区别不大，但是原理是不同的。
+        // 链接：https://www.zhihu.com/question/29663085/answer/137864155
+
+
+
+
+        // 第六版 https://github.com/mqyqingfeng/Blog/issues/22
+        // 建议将第四版和第五版换个顺序，在第四版中，由于func始终是异步执行的，return result返回一直是undefined，只有在第五版中immediate参数为true的情况下，result才会取到结果，所以建议换个顺序更加严谨一些。
+        // function debounce(func, wait, immediate) {
+        //     var timeout, result;
+
+        //     var debounced = function () {
+        //         var context = this;
+        //         var args = arguments;
+
+        //         if (timeout) clearTimeout(timeout);
+        //         if (immediate) {
+        //             // 如果已经执行过，不再执行
+        //             var callNow = !timeout;
+        //             timeout = setTimeout(function(){
+        //                 timeout = null;
+        //             }, wait)
+        //             if (callNow) result = func.apply(context, args)
+        //         }
+        //         else {
+        //             timeout = setTimeout(function(){
+        //                 func.apply(context, args)
+        //             }, wait);
+        //         }
+        //         return result;
+        //     };
+
+        //     debounced.cancel = function() {
+        //         clearTimeout(timeout);
+        //         timeout = null;
+        //     };
+
+        //     return debounced;
+        // }
+
+
+        // 防抖： 持续触发事件时，一定时间段内没有再触发事件，事件处理函数才会执行一次，如果设定的时间到来之前，又一次触发了事件，就重新开始延时。
+        // 防抖，即短时间内大量触发同一事件，只会执行一次函数，实现原理为设置一个定时器，约定在xx毫秒后再触发事件处理，每次触发事件都会重新设置计时器，直到xx毫秒内无第二次操作，防抖常用于搜索框/滚动条的监听事件处理，如果不做防抖，每输入一个字/滚动屏幕，都会触发事件处理，造成性能浪费
+        // 应用场景 函数防抖的应用场景：输入框搜索自动补全事件，频繁操作点赞和取消点赞等等。
+
+        // function debounce(func, wait) {
+        //     let timeout = null
+        //     return function () {
+        //         debugger
+        //         let context = this
+        //         let args = arguments
+        //         if (timeout) clearTimeout(timeout)
+        //         timeout = setTimeout(() => {
+        //             func.apply(context, args)
+        //         }, wait)
+        //     }
+        // }
+
+        // 作者：写代码像蔡徐抻
+        // 链接：https://juejin.cn/post/6844904116552990727
+        // https://www.cnblogs.com/xiao-yaolx/p/11329551.html
+        // document.getElementById('app').onclick = debounce(function() {
+        //     console.log('sssss');
+        // }, 1000)
+
+    </script>
+</body>
+</html>

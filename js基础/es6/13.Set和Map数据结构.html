@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        const s = new Set();
+        [2, 3, 5, 4, 5, 2, 2].forEach(x => s.add(x));
+        console.log(s);
+        // for (var i of s) {
+        //     console.log(i);
+        // }
+
+        var set = new Set(['red', 'green', 'blue']);
+        console.log('set.keys()', set.keys());
+        console.log('set.values()', set.values());
+        console.log('set.entries()', set.entries());
+        for (var item of set.keys()) {
+            console.log(item);
+        }
+        // red
+        // green
+        // blue
+
+        for (var item of set.values()) {
+            console.log(item);
+        }
+        // red
+        // green
+        // blue
+
+        for (var item of set.entries()) {
+            console.log(item);
+        }
+        // ["red", "red"]
+        // ["green", "green"]
+        // ["blue", "blue"]
+
+        var set3 = new Set([1, 2, 3]);
+        set3 = new Set(Array.from(set3, val => val * 2));
+        console.log('set3', set3);
+        // Set(3) {2, 4, 6}
+
+        var set = new Set(['a', 'b', 'c']);
+        console.log(set.entries()); // SetIterator {"a" => "a", "b" => "b", "c" => "c"}
+        console.log([...set.entries()]); // [["a", "a"], ["b", "b"], ["c", "c"]]
+    </script>
+</body>
+</html>

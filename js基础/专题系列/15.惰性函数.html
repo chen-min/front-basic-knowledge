@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">1111</div>
+    <script>
+        // function addEvent (type, el, fn) {
+        //     if (window.addEventListener) {
+        //         el.addEventListener(type, fn, false);
+        //     }
+        //     else if(window.attachEvent){
+        //         el.attachEvent('on' + type, fn);
+        //     }
+        // }
+        // function addEvent (type, el, fn) {
+        //     if (window.addEventListener) {
+        //         addEvent = function (type, el, fn) {
+        //             el.addEventListener(type, fn, false);
+        //         }
+        //     }
+        //     else if(window.attachEvent){
+        //         addEvent = function (type, el, fn) {
+        //             el.attachEvent('on' + type, fn);
+        //         }
+        //     }
+        //     addEvent(type, el, fn) 
+        // }
+        var addEvent = (function(){
+            if (window.addEventListener) {
+                return function (type, el, fn) {
+                    el.addEventListener(type, fn, false);
+                }
+            }
+            else if(window.attachEvent){
+                return function (type, el, fn) {
+                    el.attachEvent('on' + type, fn);
+                }
+            }
+        })();
+        addEvent('click', document.querySelector('#app'), () => {
+            console.log(11);
+        })
+    </script>
+</body>
+</html>

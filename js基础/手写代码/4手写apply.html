@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // apply() 方法调用一个具有给定this值的函数，以及以一个数组（或类数组对象）的形式提供的参数。MDN func.apply(thisArg, [argsArray])
+        // _apply，Function原型对象上的一个方法，改变函数this指向。接受参数为一个对象，一个数组。一个（target, array）
+        // 返回值
+        // target  args 可能为空
+        // 思路: 同call方法，为target添加属性fn，调用结束后删除该属性。
+        Function.prototype._apply = function(target, args) {
+            const fn = Symbol('fn');
+            target = target || window;
+            args = args || [];
+            target.fn = this;
+            const result = target.fn(...args)
+            delete target.fn;
+            // console.log(target);
+            return result;
+        }
+        function log(name, year) {
+            console.log(this.tag);
+            console.log(name);
+            console.log(year);
+        }
+        var person1 = {
+            country: '三国'
+        }
+        log._apply(person1, ['赵云', '30岁'])
+        console.log('--------------------------');
+
+
+        function foo(){
+          console.log(this.name);  
+        };
+
+        const obj = {
+            name: '蔡徐坤'
+        };
+        // apply 指定目标对象和参数数组，调用后
+        Function.prototype._apply = function(target, args) {
+            console.log(args);
+            args = args || [];
+            target = target || window;
+            target.fn = this;
+            const result = target.fn(...args);
+            delete target.fn;
+            return result;
+        }
+        foo._apply(obj, []);
+
+        // eval写法
+        // Function.prototype.apply = function (context, arr) {
+        //     var context = Object(context) || window;
+        //     context.fn = this;
+
+        //     var result;
+        //     if (!arr) {
+        //         result = context.fn();
+        //     }
+        //     else {
+        //         var args = [];
+        //         for (var i = 0, len = arr.length; i < len; i++) {
+        //             args.push('arr[' + i + ']');
+        //         }
+        //         result = eval('context.fn(' + args + ')')
+        //     }
+
+        //     delete context.fn
+        //     return result;
+        // }
+        
+        // apply拓展
+        // 但是值得一提的是，上面例子中的循环：
+        // for (var i = 0, len = arguments.length; i < len; i++) {
+        //     values.push(arguments[i]);
+        // }
+        // 可以替换成：
+        // values.push.apply(values, arguments);
+
+    </script>
+</body>
+</html>

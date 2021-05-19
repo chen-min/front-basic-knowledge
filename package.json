@@ -1,0 +1,26 @@
+{
+  "name": "front-basic-knowledge",
+  "version": "1.0.0",
+  "description": "前端基础拾遗90问（掘金）",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EricWong1994/front-basic-knowledge.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EricWong1994/front-basic-knowledge/issues"
+  },
+  "homepage": "https://github.com/EricWong1994/front-basic-knowledge#readme",
+  "devDependencies": {
+    "jquery": "^3.6.0",
+    "lodash": "^4.17.21",
+    "underscore": "^1.9.0"
+  },
+  "dependencies": {}
+}

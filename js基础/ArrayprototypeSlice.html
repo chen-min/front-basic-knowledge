@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+         //JavaScript中的Array.prototype.slice.call(arguments)能将有length属性的对象转换为数组  https://www.cnblogs.com/wphl-27/p/10336591.html
+        // slice 方法可以用来将一个类数组（Array-like）对象/集合转换成一个新数组。你只需将该方法绑定到这个对象上。 一个函数中的  arguments 就是一个类数组对象的例子。
+        function list() {
+            return Array.prototype.slice.call(arguments);
+        }
+
+        var list1 = list(1, 2, 3); // [1, 2, 3]
+        
+    </script>
+</body>
+</html>

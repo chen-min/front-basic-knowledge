@@ -1,0 +1,17 @@
+.test {
+    margin-top: upx(300px);
+    // width: min-width;
+    // min-width: 100%;
+    // display: flex;
+    // display: grid;
+    display: inline-grid;
+    width: 100%;
+    // grid-template-columns: repeat(auto-fill, 100px);
+    // grid-template-columns: repeat(auto-fill, auto);
+    grid-auto-flow: column;
+    .item {
+        // flex-shrink: 0;
+        // display: inline-grid;
+
+    }
+}

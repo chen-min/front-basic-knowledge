@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // bind() 方法会创建一个新函数。当这个新函数被调用时，bind() 的第一个参数将作为它运行时的 this，之后的一序列参数将会在传递的实参前传入作为它的参数。(来自于 MDN )
+
+        // Function原型对象上的方法，接受一个对象(context)，可预置的参数列表 arguments。
+        // return 一个新的函数 1、this指向上面的context 2、若为构造函数，this指向实例。且继承构造函数的私有属性及protoType上的属性
+        // 特殊考虑，
+        // context为空时、不传参数时
+        Function.prototype._bind = function(context, ...otherArgs) {
+            if (typeof this !== "function") {
+                throw new Error("Function.prototype.bind - what is trying to be bound is not callable");
+            }
+            context = context || window;
+            const that = this;
+            const fBound = function () {
+                console.log('111111arguments', arguments);
+                ;
+                console.log('this', this);
+                console.log('this.constructor', this.constructor);
+
+                return that.apply(
+                    this instanceof that ? this : context,
+                 otherArgs.concat([].slice.call(arguments)))
+            }
+            // fBound.prototype = this.prototype;
+            // 但是在这个写法中，我们直接将 fBound.prototype = this.prototype，我们直接修改 fBound.prototype 的时候，也会直接修改绑定函数的 prototype。这个时候，我们可以通过一个空函数来进行中转：
+            var fNOP = function () {};
+            fBound.prototype = new fNOP();
+            return fBound;
+        }
+        const fnn = function(a, b, c, p) {
+            console.log('a', a);
+            console.log('b', b);
+            console.log('c', c);
+            console.log('p', p);
+            console.log(this.name, arguments);
+        }
+        const objj = {
+            name: 'objjname'
+        }
+        const newFnn = fnn._bind(objj, 'a', 'b', 'c')
+        // newFnn('ppp');
+        const newFnn2 = new newFnn();
+        newFnn2.name = '实例'
+        console.log('---------------------------');
+
+
+        // https://github.com/es-shims/es5-shim
+        // https://blog.csdn.net/q3254421/article/details/82999718
+        Function.prototype.myBind = function (thisArg, ...args) {
+            var self = this
+            console.log('this222', this);
+            var fbound = function () {
+                console.log('this', this);
+                // 如果当前函数的this指向的是构造函数中的this 则判定为new 操作
+                self.apply(this instanceof self ? this : thisArg, args.concat(Array.prototype.slice.call(arguments)))
+                // slice 方法可以用来将一个类数组（Array-like）对象/集合转换成一个新数组。
+            }
+            // 继承原型上的属性和方法
+            fbound.prototype = Object.create(self.prototype);
+            return fbound;
+        }
+
+        //测试
+        const obj = { name: '写代码像蔡徐抻' }
+        function foo() {
+            console.log(this.name)
+            console.log(arguments)
+        }
+
+        foo.myBind(obj, 'a', 'b', 'c')()    //输出写代码像蔡徐抻 ['a', 'b', 'c']
+        console.log('-----------------------');
+
+        const str = 'littleLuke';
+        console.log(str);
+        var a = function () {
+            console.log(this); // String {"littleLuke"}
+            console.log(this.constructor); // f String() { [native code] }
+            console.log(typeof this); // object
+            console.log(this instanceof String); // true
+        }
+
+        a.call('littleLuke');
+        console.log('-----------------------');
+
+        (function () {
+            const str = '前端巅峰Peter老师牛逼'
+            str.xxoo = '你关注了吗？'
+            console.log(str.xxoo, 'xxoo')
+        })()
+        console.log('-----------------------');
+
+        // 原始代码：
+        const str2 = 'Peter老师666'
+        str2.substring(1)
+        console.log('str2', str2);
+        // 真正内部执行的是：
+        // let str = new String('Peter老师666') 
+        // let str1 = str.substring(1) 
+        // str = null 
+        // 你不知道的typeof string 竟然等于object
+        // 这就叫原始值包装类型，它的声明周期只是这一行访问它的代码执行完就销毁了。这是它与引用类型的区别，我们通过new String()创建的实例就是一个引用类型，所以它是一个 object.
+        console.log(typeof 'abc'); // string
+        // https://blog.csdn.net/weixin_42864905/article/details/109262417
+        console.log('---------最终代码-----------');
+
+        Function.prototype.bind2 = function (context) {
+            if (typeof this !== "function") {
+                throw new Error("Function.prototype.bind - what is trying to be bound is not callable");
+            }
+
+            var self = this;
+            var args = Array.prototype.slice.call(arguments, 1);
+
+            var fNOP = function () {};
+
+            var fBound = function () {
+                var bindArgs = Array.prototype.slice.call(arguments);
+                return self.apply(this instanceof fNOP ? this : context, args.concat(bindArgs));
+            }
+
+            fNOP.prototype = this.prototype;
+            fBound.prototype = new fNOP();
+            return fBound;
+        }
+    
+    </script>
+</body>
+</html>
