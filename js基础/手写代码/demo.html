@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+        body {
+            height: 100vh;
+        }
+    </style>
+    <div>app</div>
+    <script>
+        // 6 防抖 
+        // 指定时间内，持续触发事件，只会执行最后一次，一般用于防止用户短时间内重复操作
+        // 上电梯、每上一人 多等5s，才会关门
+        // 实现，定时器x秒后执行，期间触发，则清空定时器,闭包
+
+        // 细节：this指向，函数参数
+        // function debounce(fn, wait) {
+        //     let timer;
+        //     return function() {
+        //         var that = this;
+        //         if(timer) clearTimeout(timer)
+        //         timer = setTimeout(() => {
+        //             fn && fn.call(that, arguments);
+        //         }, wait)
+        //     }
+        // }
+        // const testfn = (a,b) => {
+        //     console.log('1111');
+        //     console.log('a', a);
+        //     console.log('b', b);
+        // }
+        // window.onclick = debounce(testfn, 1000)
+        // window.onclick = testfn;
+
+
+        // 节流是 
+        // 场景onmove resize touchmove事件
+        // function throttle(fn, duration) {
+        //     let flag = false;
+        //     return function() {
+        //         if(flag) return;
+        //         setTimeout(() => {
+        //             flag = true;
+        //             fn && fn();
+        //         }, duration)
+        //     }
+        // }
+        function throttle(fn, duration) {
+            let flag = false;
+            return function() {
+                console.log('flag: ', flag);
+                if(flag) return;
+                flag = true;
+                setTimeout(() => {
+                    console.log('setTimeout: ', setTimeout);
+                    fn && fn();
+                    flag = false
+                }, duration)
+            }
+        }
+        const testfn = () => {
+            console.log('1111');
+        }
+        window.onclick = throttle(testfn, 2000)
+        // window.onclick = testfn;
+        // 防抖是延迟执行，而节流是间隔执行
+    </script>
+</body>
+</html>

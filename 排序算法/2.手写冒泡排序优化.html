@@ -8,6 +8,10 @@
 </head>
 <body>
     <script>
+        // 冒泡、通过临时变量交换前后位置 双层for循环 外层轮数 内层比较次数
+        // 优化，判断某次循环是否前后是否交换过位置
+
+        
         // 1、比较相邻的两个元素，如果前一个比后一个大，则交换位置。
         // 2、比较完第一轮的时候，最后一个元素是最大的元素。
         // 3、这时候最后一个元素是最大的，所以最后一个元素就不需要参与比较大小。
@@ -22,13 +26,13 @@
         function bubbleSort(arr){
         for(let i = 0; i < arr.length; i++) {
             let flag = true
-                for(let j = 0; j < arr.length - i - 1; j++) {
+            for(let j = 0; j < arr.length - i - 1; j++) {
                 if(arr[j] > arr[j+1]) {
-                    flag = false
-                    let temp = arr[j]
-                    arr[j] = arr[j+1]
-                    arr[j+1] = temp
-                }
+                        flag = false
+                        let temp = arr[j]
+                        arr[j] = arr[j+1]
+                        arr[j+1] = temp
+                    }
                 }
                 // 这个flag的含义是：如果`某次循环`中没有交换过元素，那么意味着排序已经完成
                 if(flag)break;

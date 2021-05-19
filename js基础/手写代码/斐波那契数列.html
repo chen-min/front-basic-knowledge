@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // 实现一个斐波那契数列 1 1 2 3 5 8 13 21 34 55 89 。。。
+        // 1 递归、
+        // function fn(n) {
+        //     if (n === 1 || n === 2) {
+        //         return 1;
+        //     } else {
+        //         return fn(n - 2) + fn(n - 1);
+        //     };
+        // }
+        const num = 8;
+        // for(let i = 1; i < num; i++) {
+        //     var res = fn(i);
+        //     console.log('res: ', res); //13
+        // };
+
+        // 2.尾调用
+        function fn(n, ac1 = 1, ac2 = 1) {
+            if (n<=2) {
+                // console.log('ac2: ', ac2);
+                return ac2;
+            } 
+            return fn(n-1, ac2, ac1 + ac2);
+        }
+        const num = 8;
+        for(let i = 1; i < num; i++) {
+            var res = fn(i);
+            console.log('res: ', res); //13
+        };
+
+    </script>
+</body>
+</html>

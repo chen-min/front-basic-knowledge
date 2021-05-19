@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="./lodash.js"></script>
+    <script>
+        const numRef = [{
+        "num": 1,
+        "word": "One"
+        }, {
+        "num": 2,
+        "word": "Two"
+        }, {
+        "num": 3,
+        "word": "Three"
+        }, {
+        "num": 4,
+        "word": "Four"
+        }, {
+        "num": 5,
+        "word": "Five"
+        }, {
+        "num": 0,
+        "word": "Zero"
+        }];
+        function numToWord(num) {
+            return _.reduce(numRef, (accum, ref) => {
+                console.log('accum: ', accum);
+                console.log('ref: ', ref);
+                return ref.num === num ? ref.word : accum;
+            }, '');
+        };
+        function wordToNum(word) {
+            return _.reduce(numRef, (accum, ref) => {
+                return ref.word === word && word.toLowerCase() ? ref.num : accum;
+            }, -1);
+        };
+
+        const res1 = numToWord(2);
+        console.log('res1: ', res1);
+        const res2 = wordToNum('Four');
+        console.log('res2: ', res2);
+        // fn();
+        // _.reduce({ 'a': 1, 'b': 2, 'c': 1 }, function (result, value, key) {
+        //     console.log('result: ', result);
+        //     console.log('value: ', value);
+        //     debugger
+        //     (result[value] || (result[value] = [])).push(key);
+        //     return result;
+        // }, {});
+    </script>
+</body>
+
+</html>

@@ -8,6 +8,10 @@
 </head>
 <body>
     <script>
+        // 快速排序
+        // 选取中间值m、分2个数组，遍历数组与m比较分别push, 返回 leftArr + mid + right，递归终止条件length = 1
+
+
         // 选取基准元素
         // 比基准元素小的元素放到左边，大的放右边
         // 在左右子数组中重复步骤一二，直到数组只剩下一个元素
@@ -32,7 +36,7 @@
                 }
             }
             return [ ...quickSort(leftArr), pivotValue, ...quickSort(rightArr)]
-            // return quickSort(leftArr).concat(quickSort(rightArr))
+            // return quickSort(leftArr).concat(middleValue).concat(quickSort(rightArr))
         }
         let myRes = quickSort(arr);
         console.log('myRes', myRes);

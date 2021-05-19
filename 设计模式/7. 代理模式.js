@@ -17,7 +17,7 @@ const agent = new Proxy(idol, {
         if(key === 'price' ) {
         //经纪人过滤资质
         if(value < target.price) throw new Error('报价过低')
-        target.price = value
+            target.price = value
         }
     }
 })

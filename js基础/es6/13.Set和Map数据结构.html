@@ -20,21 +20,21 @@
         console.log('set.values()', set.values());
         console.log('set.entries()', set.entries());
         for (var item of set.keys()) {
-        console.log(item);
+            console.log(item);
         }
         // red
         // green
         // blue
 
         for (var item of set.values()) {
-        console.log(item);
+            console.log(item);
         }
         // red
         // green
         // blue
 
         for (var item of set.entries()) {
-        console.log(item);
+            console.log(item);
         }
         // ["red", "red"]
         // ["green", "green"]
@@ -43,9 +43,10 @@
         var set3 = new Set([1, 2, 3]);
         set3 = new Set(Array.from(set3, val => val * 2));
         console.log('set3', set3);
+        // Set(3) {2, 4, 6}
 
         var set = new Set(['a', 'b', 'c']);
-        console.log(set.entries()); // SetIterator {"a", "b", "c"}
+        console.log(set.entries()); // SetIterator {"a" => "a", "b" => "b", "c" => "c"}
         console.log([...set.entries()]); // [["a", "a"], ["b", "b"], ["c", "c"]]
     </script>
 </body>

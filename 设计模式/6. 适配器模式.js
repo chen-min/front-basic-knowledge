@@ -3,16 +3,16 @@ class Adaptee {
     test() {
         return '旧接口'
     }
-  }
+}
    
 class Target {
-constructor() {
-    this.adaptee = new Adaptee()
-}
-test() {
-    let info = this.adaptee.test()
-    return `适配${info}`
-}
+    constructor() {
+        this.adaptee = new Adaptee()
+    }
+    test() {
+        let info = this.adaptee.test()
+        return `适配${info}`
+    }
 }
 
 let target = new Target()

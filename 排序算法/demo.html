@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        // // 冒泡、通过临时变量交换前后位置 双层for循环 外层轮数 内层比较次数
+        // // 优化，判断某次循环是否前后是否交换过位置 
+        // function bubbleSort(arr) {
+        //     for(var i = 0; i < arr.length; i++) {
+        //         for(var k = 0; k < arr.length - i - 1; k++) {
+        //             if(arr[k] > arr[k+1]) {
+        //                 let temp = arr[k+1]
+        //                 arr[k+1] = arr[k];
+        //                 arr[k] = temp;
+        //             }
+        //         }
+        //     }
+        //     return arr;
+        // }
+        // const arr = [33,4,1,22,999];
+        // const res = bubbleSort(arr);
+        // console.log('res: ', res);
+        
+        // 快速排序
+        // 选取中间值m、分2个数组，遍历数组与m比较分别push, 返回 leftArr + mid + right，递归终止条件length = 1
+        // function quickSort(arr) {
+        //     if (arr.length <= 1) return arr;
+        //     // if(!Array.isArray(leftArr)) return
+        //     var midIndex = Math.ceil(arr.length / 2);
+        //     const middleValue = arr.splice(midIndex, 1)[0]
+        //     var leftArr = [];
+        //     // var leftArr = arr.slice(0, midIndex);
+        //     // var rightArr = arr.slice(midIndex);
+        //     var rightArr = [];
+        //     for(var i = 0; i < arr.length; i++) {
+        //         if(arr[i] < middleValue) {
+        //             leftArr.push(arr[i])
+        //         } else {
+        //             rightArr.push(arr[i])
+        //         }
+        //     }
+        //     return [ ...quickSort(leftArr), middleValue, ...quickSort(rightArr)]
+        //     // return quickSort(leftArr).concat(middleValue).concat(quickSort(rightArr))
+        // }
+        // const arr = [33,4,1,22,999];
+        // const res = quickSort(arr);
+        // console.log('res: ', res);
+
+        // 归并排序 1 递归将数组拆分2份leftArr rightArr，并调用merge函数进行合并，
+        // 递归结束条件 length = 1
+        // merge(mergeSort(leftArr), mergeSort(rightArr))
+        function merge(leftArr, rightArr) {
+            var res = [];
+            while(leftArr.length > 0 && rightArr.length > 0) {
+                if (leftArr[0] < rightArr[0]) {
+                    res.push(leftArr.shift())
+                } else {
+                    res.push(rightArr.shift())
+                }
+            }
+            return [...res, ...leftArr, ...rightArr];
+        }
+        function mergeSort(arr) {
+            if(arr.length === 1) return arr;
+            var midIndex = Math.floor(arr.length / 2);
+            var leftArr = arr.slice(0, midIndex);
+            var rightArr = arr.slice(midIndex);
+            return merge(mergeSort(leftArr), mergeSort(rightArr))
+        }
+        const arr = [33,4,1,22,999];
+        const res = mergeSort(arr);
+        console.log('res: ', res);
+    </script>
+</body>
+</html>
