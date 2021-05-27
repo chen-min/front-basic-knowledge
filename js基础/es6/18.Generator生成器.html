@@ -8,6 +8,23 @@
 </head>
 <body>
     <script>
+        // Generator 函数是 ES6 提供的一种异步编程解决方案
+        // 执行 Generator 函数会返回一个遍历器对象，也就是说，Generator 函数除了状态机，还是一个遍历器对象生成函数。返回的遍历器对象，可以依次遍历 Generator 函数内部的每一个状态。
+        function* WeaponGenerator(){
+            yield "1";
+            yield "2";
+            yield "3";
+        }
+
+        for(let item of WeaponGenerator()){
+            console.log(item);
+        }
+        // 使用迭代器控制生成器。
+
+        // 通过调用生成器返回一个迭代器对象，用来控制生成器的执行。
+        // 调用迭代器的 next 方法向生成器请求一个值。
+        // 请求的结果返回一个对象，对象中包含一个value值和 done 布尔值，告诉我们生成器是否还会生成值。
+        // 如果没有可执行的代码，生成器就会返回一个 undefined 值，表示整个生成器已经完成。
         function* gen(){
             yield 111;
             yield 222;

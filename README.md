@@ -1,2 +1,2 @@
 # front-basic-knowledge
-前端基础拾遗90问（掘金）
+前端零散知识

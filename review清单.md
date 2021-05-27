@@ -6,7 +6,7 @@ es678：set map  promise async/await 装饰器  Proxy
 git： 工作流git-flow --rest rebase revert reset
 http: 浏览器协商缓存、强制缓存
 设计模式: 面向过程 面向对象、
-lodash/underscore: _.reduce _.join isEquel ...
+lodash/underscore: _.reduce _.join isEquel pick ...
 redux:  Store  reducer action dispatch 
 vue: 响应式原理、常见指令、watch computed Vue3特性 
 react:  异步中间件redux-thunk fiber
@@ -14,7 +14,8 @@ webpack: entry output loader plugin
 react-router基本用法、
 axios基本用法
 antd：常见组件、基本用法
-TypeScript: interface enum 泛型 
+TypeScript: interface enum 泛型
+新技术
 
 单元测试： 1d
 node.js 1d 基本用法 fs http path 
@@ -42,3 +43,9 @@ detail:
 桶排序()
 
 debounce函数 todo: arguments参数怎么传
+js： todo
+##for in和for of区别?
+
+说说 Generator 是如何使用的？以及各个阶段的状态是如何变化的？
+说说 Generator 内部结构实现？
+说说 Promise 的原理？你是如何理解 Promise 的？
