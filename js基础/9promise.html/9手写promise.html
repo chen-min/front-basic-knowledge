@@ -9,7 +9,7 @@
 <body>
     <script>
         // class MyPromise {
-        //     // 构造方法接收一个回调
+        //     // 构造方法接收一个回调, 这个回调是在Promise里执行的
         //     constructor(executor) {
         //         this._resolveQueue = []    // then收集的执行成功的回调队列
         //         this._rejectQueue = []     // then收集的执行失败的回调队列
@@ -45,6 +45,8 @@
         //         resolve('result')
         //     }, 1000);
         // })
+
+        
         //Promise/A+规范的三种状态
     const PENDING = 'pending'
     const FULFILLED = 'fulfilled'

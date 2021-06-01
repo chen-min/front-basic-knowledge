@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const promise = new Promise((resolve, reject) => {
+    console.log(1);
+    resolve();
+    console.log(2);
+    reject('error');
+})
+promise.then(() => {
+    console.log(3);
+}).catch(e => console.log(e))
+console.log(4);
+
+
+            // p1.then(res => {
+            //     console.log('res', res)
+            // })
+
+        // var p1 = new Promise(function (resolve, reject) {
+        //     throw Error('sync error')
+        // })
+        //     .then(res => {
+        //         console.log('res', res)
+        //     })
+        //     .catch(err => {
+        //         console.log('err111', err)
+        //     })
+        
+        // var p1 = new Promise(function (resolve, reject) {
+        //     setTimeout(() => {
+        //         throw Error('async error')
+        //     })
+        // })
+        //     .then(res => {
+        //         console.log(res)
+        //     })
+        //     .catch(err => {
+        //         console.log('err2222', err)
+        //     })
+
+        // promise接收一个函数fn，初始化时立即执行此函数fn(_resolve,_reject)
+        // 手写注意事项，then的回调函数是在resolve时执行的
+        // 3种状态变化
+
+        const PENDING = 'pending'
+        const FULFILLED = 'fulfilled'
+        const REJECTED = 'rejected'
+        class MyPromise {
+            constructor(executor) {
+                this._resolveQueue = [];
+                this._rejectQueue = [];
+                this._states = PENDING;
+                let _resolve = val => {
+                    if(this._states !== PENDING) return;
+                    while(this._resolveQueue.length) {
+                        const callback = this._resolveQueue.shift();
+                        callback(val);
+                        this._states = FULFILLED
+                    }
+                }
+                let _reject = val => {
+                    if(this._states !== PENDING) return;
+                    while(this._rejectQueue.length) {
+                        this._states = 'rejected'
+                        const callback = this._rejectQueue.shift();
+                        callback(val);
+                        this._states = REJECTED
+                    }
+                }
+                executor(_resolve, _reject)
+            }
+            then(resolveCallback) {
+                this._resolveQueue.push(resolveCallback);
+            }
+            catch(err) {
+                this._rejectQueue.push(resolveCallback);
+            }
+        }
+        var p1 = new MyPromise(function (resolve, reject) {
+            // throw Error('sync error')
+            setTimeout(() => {
+                resolve(666)
+            }, 1500)
+        })
+            .then(res => {
+                console.log('res', res)
+            })
+            // .catch(err => {
+            //     console.log('err111', err)
+            // })
+
+        // var p1 = new Promise(function(resolve, reject) {
+        //     resolve()
+        // })
+        //     .then(res => {
+        //         throw Error('sync error') 
+        //     })
+
+    </script>
+</body>
+
+</html>
